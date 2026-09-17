@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Faith B. Vellem — UI Architect</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+  :root{
+    --navy:#0F2436;
+    --navy-deep:#0A1A28;
+    --grid-line:rgba(139,168,191,0.14);
+    --grid-line-strong:rgba(139,168,191,0.28);
+    --paper:#F1EEE4;
+    --paper-dim:#E5E0D0;
+    --ink:#182028;
+    --ink-soft:#4B5560;
+    --amber:#D69A3C;
+    --amber-soft:#8A6A34;
+    --slate:#9FB4C6;
+    --slate-dim:#5C7488;
+    --max-w:1180px;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--navy);
+    color:var(--paper);
+    font-family:'Inter',sans-serif;
+    font-size:16px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{
+    font-family:'Space Grotesk',sans-serif;
+    margin:0;
+    color:var(--paper);
+    font-weight:600;
+    letter-spacing:-0.01em;
+  }
+  a{color:inherit;}
+  a:focus-visible, button:focus-visible{
+    outline:2px solid var(--amber);
+    outline-offset:3px;
+  }
+  .mono{font-family:'IBM Plex Mono',monospace;}
+  .wrap{max-width:var(--max-w); margin:0 auto; padding:0 32px;}
+
+  /* ---------- background blueprint grid ---------- */
+  .blueprint-bg{
+    position:fixed; inset:0; z-index:-1;
+    background-color:var(--navy);
+    background-image:
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size:44px 44px;
+  }
+
+  /* ---------- nav ---------- */
+  header.site-nav{
+    position:sticky; top:0; z-index:50;
+    background:rgba(15,36,54,0.88);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--grid-line-strong);
+  }
+  .nav-inner{
+    max-width:var(--max-w); margin:0 auto; padding:18px 32px;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .nav-mark{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:18px; letter-spacing:0.02em;}
+  .nav-mark span{color:var(--amber);}
+  nav.links{display:flex; gap:28px; flex-wrap:wrap;}
+  nav.links a{
+    font-size:13px; text-decoration:none; color:var(--slate);
+    font-family:'IBM Plex Mono',monospace;
+    letter-spacing:0.03em;
+    margin-right:28px;
+    transition:color .15s ease;
+  }
+  nav.links a:last-child{margin-right:0;}
+  nav.links a:hover{color:var(--paper);}
+
+  /* ---------- hero ---------- */
+  .hero{
+    position:relative;
+    padding:120px 0 90px;
+    border-bottom:1px solid var(--grid-line-strong);
+  }
+  .corner{
+    position:absolute; width:26px; height:26px;
+    border:1px solid var(--slate-dim);
+  }
+  .corner.tl{top:36px; left:32px; border-right:none; border-bottom:none;}
+  .corner.tr{top:36px; right:32px; border-left:none; border-bottom:none;}
+  .hero-tag{
+    font-family:'IBM Plex Mono',monospace; font-size:12.5px;
+    color:var(--slate-dim); letter-spacing:0.08em;
+    margin-bottom:28px;
+  }
+  .hero h1{
+    font-size:clamp(40px, 6vw, 68px);
+    line-height:1.04;
+    max-width:16ch;
+  }
+  .hero .role-line{
+    margin-top:18px;
+    font-size:clamp(17px,2.2vw,21px);
+    color:var(--slate);
+    max-width:46ch;
+  }
+  .draft-underline{
+    display:block; margin-top:26px; width:220px; height:10px;
+  }
+  .draft-underline path{
+    stroke:var(--amber); stroke-width:2; fill:none;
+    stroke-dasharray:260; stroke-dashoffset:260;
+    animation:draw 1.1s ease forwards .3s;
+  }
+  @media (prefers-reduced-motion:reduce){
+    .draft-underline path{animation:none; stroke-dashoffset:0;}
+  }
+  @keyframes draw{ to { stroke-dashoffset:0; } }
+
+  .hero-summary{
+    margin-top:34px; max-width:62ch; color:var(--paper); opacity:0.92;
+    font-size:16px;
+  }
+
+  .hero-cta{
+    margin-top:38px; display:flex; gap:16px; flex-wrap:wrap;
+  }
+  .btn{
+    font-family:'IBM Plex Mono',monospace; font-size:13px;
+    padding:12px 20px; text-decoration:none; letter-spacing:0.03em;
+    border:1px solid var(--slate-dim); display:inline-block;
+    transition:border-color .15s ease, color .15s ease;
+  }
+  .btn.primary{ background:var(--amber); color:var(--navy-deep); border-color:var(--amber); font-weight:500;}
+  .btn.primary:hover{ background:#e6ac52; }
+  .btn.ghost{ color:var(--slate); }
+  .btn.ghost:hover{ color:var(--paper); border-color:var(--paper); }
+
+  /* title block */
+  .title-block{
+    margin-top:64px;
+    border:1px solid var(--grid-line-strong);
+    display:flex; flex-wrap:wrap;
+    max-width:640px;
+  }
+  .title-block div{
+    flex:1 1 0; min-width:160px;
+    padding:16px 20px; border-right:1px solid var(--grid-line-strong);
+  }
+  .title-block div:last-child{border-right:none;}
+  .title-block .label{
+    font-family:'IBM Plex Mono',monospace; font-size:10.5px;
+    color:var(--slate-dim); letter-spacing:0.08em; margin-bottom:6px;
+  }
+  .title-block .value{
+    font-family:'Space Grotesk',sans-serif; font-size:22px; color:var(--amber); font-weight:600;
+  }
+
+  /* ---------- section shell ---------- */
+  section{padding:90px 0;}
+  section + section{border-top:1px solid var(--grid-line-strong);}
+  .section-head{
+    display:flex; align-items:baseline; justify-content:space-between;
+    margin-bottom:48px; flex-wrap:wrap; gap:10px;
+  }
+  .section-head h2{font-size:clamp(26px,3.4vw,34px);}
+  .section-index{
+    font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:var(--slate-dim);
+  }
+
+  /* ---------- builds grid ---------- */
+  .platform-group{margin-bottom:56px;}
+  .platform-group:last-child{margin-bottom:0;}
+  .platform-label{
+    font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:var(--amber);
+    letter-spacing:0.08em; margin-bottom:18px; display:flex; align-items:center; gap:10px;
+  }
+  .platform-label::after{
+    content:""; flex:1; height:1px; background:var(--grid-line-strong);
+  }
+  .plates{
+    display:flex; flex-wrap:wrap;
+    background:var(--grid-line-strong);
+    border:1px solid var(--grid-line-strong);
+    gap:1px;
+  }
+  .plate{
+    background:var(--navy); padding:26px 24px; position:relative;
+    transition:background .15s ease;
+    flex:1 1 300px; min-width:280px;
+  }
+  .plate:hover{background:#122b40;}
+  .plate h3{font-size:19px; margin-bottom:10px;}
+  .plate p{font-size:14.5px; color:var(--slate); margin:0 0 16px;}
+  .plate .stack{
+    font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--slate-dim);
+    letter-spacing:0.02em; margin-bottom:18px;
+  }
+  .plate .stack b{color:var(--paper); font-weight:500;}
+  .visit{
+    font-family:'IBM Plex Mono',monospace; font-size:12.5px;
+    text-decoration:none; color:var(--paper);
+    border-bottom:1px solid var(--amber); padding-bottom:2px;
+  }
+  .visit:hover{color:var(--amber);}
+
+  /* ---------- spotlight (self-initiated) ---------- */
+  .spotlight{
+    border:1px solid var(--amber-soft);
+    padding:44px; display:flex; gap:44px; flex-wrap:wrap;
+  }
+  .spotlight > div{flex:1 1 380px;}
+  .spotlight > ul{flex:1 1 320px;}
+  .spotlight .tag{
+    font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--amber);
+    letter-spacing:0.08em; margin-bottom:14px;
+  }
+  .spotlight h3{font-size:26px; margin-bottom:14px;}
+  .spotlight p{color:var(--slate); font-size:15px; margin-bottom:16px;}
+  .feature-list{list-style:none; margin:0; padding:0; font-size:14px; color:var(--paper);}
+  .feature-list li{
+    padding:10px 0; border-top:1px solid var(--grid-line);
+    display:flex; justify-content:space-between; gap:16px;
+  }
+  .feature-list li:first-child{border-top:none;}
+  .feature-list span:last-child{color:var(--slate-dim); font-family:'IBM Plex Mono',monospace; font-size:12px; text-align:right;}
+
+  /* ---------- stack / systems legend ---------- */
+  .legend{
+    display:flex; flex-wrap:wrap; gap:1px;
+    background:var(--grid-line-strong); border:1px solid var(--grid-line-strong);
+  }
+  .legend-item{background:var(--navy); padding:24px; flex:1 1 260px; min-width:240px;}
+  .legend-item .cat{
+    font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--amber);
+    letter-spacing:0.06em; margin-bottom:10px;
+  }
+  .legend-item p{margin:0; color:var(--slate); font-size:14px;}
+
+  /* ---------- experience timeline ---------- */
+  .timeline{position:relative; padding-left:26px;}
+  .timeline::before{
+    content:""; position:absolute; left:5px; top:6px; bottom:6px; width:1px;
+    background:var(--grid-line-strong);
+  }
+  .t-row{position:relative; padding-bottom:42px;}
+  .t-row:last-child{padding-bottom:0;}
+  .t-row::before{
+    content:""; position:absolute; left:-26px; top:5px; width:9px; height:9px;
+    border:1px solid var(--amber); background:var(--navy);
+  }
+  .t-row .t-date{font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--slate-dim); margin-bottom:6px;}
+  .t-row h3{font-size:18px; margin-bottom:4px;}
+  .t-row .t-co{color:var(--slate); font-size:14px; margin-bottom:10px;}
+  .t-row p{color:var(--slate); font-size:14px; margin:0; max-width:64ch;}
+
+  /* ---------- education ---------- */
+  .cred-list{list-style:none; margin:0; padding:0;}
+  .cred-list li{
+    display:flex; justify-content:space-between; gap:20px; flex-wrap:wrap;
+    padding:16px 0; border-top:1px solid var(--grid-line);
+    font-size:14.5px;
+  }
+  .cred-list li:first-child{border-top:none;}
+  .cred-list .c-name{color:var(--paper);}
+  .cred-list .c-meta{font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--slate-dim);}
+
+  /* ---------- footer / contact ---------- */
+  footer{
+    padding:80px 0 60px;
+  }
+  footer h2{font-size:clamp(28px,4vw,42px); max-width:16ch; margin-bottom:22px;}
+  .contact-grid{
+    display:flex; gap:40px; flex-wrap:wrap; margin-top:36px;
+  }
+  .contact-item{
+    display:flex; flex-direction:column; gap:7px;
+    flex:0 1 240px; min-width:200px;
+    margin-right:24px;
+  }
+  .contact-item:last-child{margin-right:0;}
+  .contact-item .label{
+    font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--slate-dim);
+    letter-spacing:0.06em;
+  }
+  .contact-item a, .contact-item span{
+    display:block;
+    font-size:15px; text-decoration:none; color:var(--paper);
+  }
+  .contact-item a:hover{color:var(--amber);}
+  .foot-note{
+    margin-top:70px; font-family:'IBM Plex Mono',monospace; font-size:11.5px;
+    color:var(--slate-dim); border-top:1px solid var(--grid-line); padding-top:22px;
+  }
+
+  @media (max-width:640px){
+    .nav-inner{flex-direction:column; align-items:flex-start; gap:12px;}
+    nav.links{gap:18px; flex-wrap:wrap;}
+    .title-block{grid-template-columns:1fr;}
+    .title-block div{border-right:none; border-bottom:1px solid var(--grid-line-strong);}
+    .title-block div:last-child{border-bottom:none;}
+  }
+</style>
+</head>
+<body>
+<div class="blueprint-bg"></div>
+
+<header class="site-nav">
+  <div class="nav-inner">
+    <div class="nav-mark">FAITH<span>.</span>VELLEM</div>
+    <nav class="links">
+      <a href="#work">Work</a>
+      <a href="#build">Build</a>
+      <a href="#stack">Stack</a>
+      <a href="#experience">Experience</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="corner tl"></div>
+  <div class="corner tr"></div>
+  <div class="wrap">
+    <div class="hero-tag">PORTFOLIO — REV 2026.09 — EASTERN CAPE, ZA</div>
+    <h1>UI systems for regulated, high-traffic platforms.</h1>
+    <svg class="draft-underline" viewBox="0 0 220 10" xmlns="http://www.w3.org/2000/svg">
+      <path d="M2 6 C 60 2, 160 10, 218 4" />
+    </svg>
+    <p class="hero-summary">Senior Front-End Engineer and UI Architect with 13+ years building component libraries and design systems for financial services, healthcare, investment, and retail platforms — across Angular, React, CrafterCMS, Magento, and WordPress. Now extending into full-stack development with Python, Django, and Next.js.</p>
+    <div class="hero-cta">
+      <a class="btn primary" href="#work">View selected builds</a>
+      <a class="btn ghost" href="#contact">Get in touch</a>
+    </div>
+
+    <div class="title-block">
+      <div>
+        <div class="label">YEARS ACTIVE</div>
+        <div class="value">13+</div>
+      </div>
+      <div>
+        <div class="label">PLATFORMS SHIPPED</div>
+        <div class="value">7</div>
+      </div>
+      <div>
+        <div class="label">AVG PERF GAIN</div>
+        <div class="value">40%</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="work">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Selected builds</h2>
+      <div class="section-index mono">CLIENT PLATFORMS — GROUPED BY CMS</div>
+    </div>
+
+    <div class="platform-group">
+      <div class="platform-label">CRAFTERCMS</div>
+      <div class="plates">
+        <div class="plate">
+          <h3>Momentum</h3>
+          <p>Enterprise platform for a major financial services group, with Angular applications integrated into the CMS. Built new components and templates for the public-facing site.</p>
+          <div class="stack">STACK: <b>CRAFTERCMS</b> / <b>ANGULAR</b></div>
+          <a class="visit" href="https://www.momentum.co.za/" target="_blank" rel="noopener">Visit site ↗</a>
+        </div>
+        <div class="plate">
+          <h3>Momentum Metropolitan</h3>
+          <p>Corporate site for the group's holding brand. New components and templates built to match brand and content requirements.</p>
+          <div class="stack">STACK: <b>CRAFTERCMS</b></div>
+          <a class="visit" href="https://www.momentummetropolitan.co.za/" target="_blank" rel="noopener">Visit site ↗</a>
+        </div>
+        <div class="plate">
+          <h3>Curate Investments</h3>
+          <p>Investment platform with custom interaction design. New components and templates, plus scroll and hover animation built with Lottie, vanilla-tilt, and GSAP.</p>
+          <div class="stack">STACK: <b>CRAFTERCMS</b> / <b>LOTTIE</b> / <b>VANILLA-TILT</b> / <b>GSAP</b></div>
+          <a class="visit" href="https://www.curateinvestments.com/sa" target="_blank" rel="noopener">Visit site ↗</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="platform-group">
+      <div class="platform-label">MAGENTO</div>
+      <div class="plates">
+        <div class="plate">
+          <h3>Matildas</h3>
+          <p>Magento storefront — new components and templates built for the retail catalogue and shopping experience.</p>
+          <div class="stack">STACK: <b>MAGENTO</b></div>
+          <a class="visit" href="https://www.matildas.co.za/" target="_blank" rel="noopener">Visit site ↗</a>
+        </div>
+        <div class="plate">
+          <h3>Carrol Boyes</h3>
+          <p>E-commerce redesign for the design-led homeware and giftware brand. New components and templates across the storefront.</p>
+          <div class="stack">STACK: <b>MAGENTO</b></div>
+          <a class="visit" href="https://carrolboyes.com" target="_blank" rel="noopener">Visit site ↗</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="platform-group">
+      <div class="platform-label">WORDPRESS</div>
+      <div class="plates">
+        <div class="plate">
+          <h3>Taste</h3>
+          <p>WordPress platform for a food and lifestyle title. New components and templates built across editorial page types.</p>
+          <div class="stack">STACK: <b>WORDPRESS</b></div>
+          <a class="visit" href="https://taste.co.za/" target="_blank" rel="noopener">Visit site ↗</a>
+        </div>
+        <div class="plate">
+          <h3>ER24</h3>
+          <p>Corporate site for the emergency medical services provider. New components and templates for the public-facing site.</p>
+          <div class="stack">STACK: <b>WORDPRESS</b></div>
+          <a class="visit" href="https://www.er24.co.za/en/corporate/home.html" target="_blank" rel="noopener">Visit site ↗</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="build">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Self-initiated build</h2>
+      <div class="section-index mono">FULL-STACK / PERSONAL PROJECT</div>
+    </div>
+    <div class="spotlight">
+      <div>
+        <div class="tag">DOCTOR BOOKING PLATFORM</div>
+        <h3>A full-stack appointment platform, built solo to prove out full-stack range.</h3>
+        <p>Built after completing a software engineering programme covering Python, Django, SQL, and Docker — applying those foundations alongside Next.js to ship a complete, working product end to end rather than isolated exercises.</p>
+        <p>Handles two distinct user roles, real scheduling logic, and post-visit feedback — the kind of end-to-end product thinking that sits behind any component built for a client platform.</p>
+      </div>
+      <ul class="feature-list">
+        <li><span>Framework</span><span>Next.js 14 (App Router)</span></li>
+        <li><span>Language</span><span>TypeScript</span></li>
+        <li><span>Data layer</span><span>Prisma ORM / SQLite</span></li>
+        <li><span>Styling</span><span>Tailwind CSS</span></li>
+        <li><span>Auth</span><span>JWT, role-based (patient / doctor)</span></li>
+        <li><span>Core flows</span><span>Booking, rescheduling, dashboards, reviews</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="stack">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Systems &amp; stack</h2>
+      <div class="section-index mono">CORE TECHNICAL EXPERTISE</div>
+    </div>
+    <div class="legend">
+      <div class="legend-item">
+        <div class="cat">FRONT-END</div>
+        <p>JavaScript (ES6+), TypeScript, Angular, React, Next.js, HTML5, CSS3, Sass, Tailwind CSS, Bootstrap, design systems, component libraries, micro-frontends.</p>
+      </div>
+      <div class="legend-item">
+        <div class="cat">BACKEND &amp; FULL-STACK</div>
+        <p>Python, Django, Prisma, REST APIs, GraphQL, SQL, SQLite, MVC architecture.</p>
+      </div>
+      <div class="legend-item">
+        <div class="cat">DEVOPS &amp; QUALITY</div>
+        <p>Docker, CI/CD pipelines, GitHub, GitLab, unit and integration testing, Lighthouse, Web Vitals, performance profiling.</p>
+      </div>
+      <div class="legend-item">
+        <div class="cat">CMS &amp; PLATFORMS</div>
+        <p>CrafterCMS, WordPress, Magento.</p>
+      </div>
+      <div class="legend-item">
+        <div class="cat">CLOUD — IN PROGRESS</div>
+        <p>AWS Skill Builder: EC2, S3, IAM, cloud fundamentals, scalable architecture, security best practices.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="experience">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Experience</h2>
+      <div class="section-index mono">2013 — PRESENT</div>
+    </div>
+    <div class="timeline">
+      <div class="t-row">
+        <div class="t-date">SEPT 2021 — PRESENT</div>
+        <h3>Senior Front-End Engineer / UI Engineer</h3>
+        <div class="t-co">Momentum Metropolitan Holdings</div>
+        <p>Reusable UI frameworks and component libraries, legacy modernisation, performance optimisation, and mentoring across enterprise Angular and React platforms.</p>
+      </div>
+      <div class="t-row">
+        <div class="t-date">OCT 2017 — AUG 2021</div>
+        <h3>Front-End Engineer</h3>
+        <div class="t-co">ChannelCenter</div>
+        <p>Scalable web applications integrated with REST and GraphQL services across multiple client platforms.</p>
+      </div>
+      <div class="t-row">
+        <div class="t-date">JAN 2017 — JUL 2017</div>
+        <h3>Front-End Developer</h3>
+        <div class="t-co">New Media Publishing</div>
+        <p>High-traffic WordPress platforms — performance, accessibility, and SEO improvements.</p>
+      </div>
+      <div class="t-row">
+        <div class="t-date">JUL 2016 — NOV 2016</div>
+        <h3>Front-End Developer, E-Commerce</h3>
+        <div class="t-co">FONTERA Digital Works</div>
+        <p>Front-end enhancements for Magento-based e-commerce platforms, including the Carrol Boyes redesign.</p>
+      </div>
+      <div class="t-row">
+        <div class="t-date">JAN 2013 — JUN 2016</div>
+        <h3>Software Developer</h3>
+        <div class="t-co">HSH Global Software</div>
+        <p>Interactive, cross-browser client-facing applications built with HTML, CSS, and JavaScript.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="education">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Education &amp; credentials</h2>
+      <div class="section-index mono">DEGREES / CERTIFICATIONS</div>
+    </div>
+    <ul class="cred-list">
+      <li><span class="c-name">National Diploma: Multimedia Technology</span><span class="c-meta">CAPE PENINSULA UNIVERSITY OF TECHNOLOGY</span></li>
+      <li><span class="c-name">Software Engineering Online Bootcamp — 99% average</span><span class="c-meta">STELLENBOSCH UNIVERSITY / HYPERIONDEV, 2025–2026</span></li>
+      <li><span class="c-name">User Experience Design Certificate</span><span class="c-meta">UNIVERSITY OF CAPE TOWN, 2019</span></li>
+      <li><span class="c-name">JavaScript &amp; jQuery Course</span><span class="c-meta">FRIENDS OF DESIGN, 2018</span></li>
+      <li><span class="c-name">Cloud Engineering — in progress</span><span class="c-meta">AWS SKILL BUILDER</span></li>
+    </ul>
+  </div>
+</section>
+
+<footer id="contact">
+  <div class="wrap">
+    <h2>Open to Senior Front-End, Lead, and Full-Stack roles.</h2>
+    <div class="contact-grid">
+      <div class="contact-item">
+        <div class="label">EMAIL</div>
+        <a href="mailto:faithmrwetyana@gmail.com">faithmrwetyana@gmail.com</a>
+      </div>
+      <div class="contact-item">
+        <div class="label">PHONE</div>
+        <span>083 263 4186</span>
+      </div>
+      <div class="contact-item">
+        <div class="label">LINKEDIN</div>
+        <a href="https://za.linkedin.com/in/faithmrwetyana" target="_blank" rel="noopener">linkedin.com/in/faithmrwetyana</a>
+      </div>
+      <div class="contact-item">
+        <div class="label">LOCATION</div>
+        <span>Eastern Cape, South Africa</span>
+      </div>
+    </div>
+    <div class="foot-note">FAITH B. VELLEM — UI ARCHITECT — PORTFOLIO REV 2026.09</div>
+  </div>
+</footer>
+
+</body>
+</html>
